@@ -3,9 +3,15 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			user: string;
+			admin: boolean;
+			baseURL: string;
+		}
 		// interface PageData {}
-		// interface PageState {}
+		interface PageState {
+			showModal: boolean;
+		}
 		// interface Platform {}
 	}
 }

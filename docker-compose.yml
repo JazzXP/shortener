@@ -1,0 +1,10 @@
+services:
+  frontend:
+    image: ghcr.io/jazzxp/shortener:latest
+    ports:
+      - 3000:3000
+    environment:
+      - ORIGIN=http://localhost:3000
+    volumes:
+      - ./keys:/shortener/keys/
+      # - ./db:/shortener/db/
