@@ -1,20 +1,14 @@
 <script>
 	import { enhance } from '$app/forms';
+	import { Label, Button, Input, Heading, Card } from 'flowbite-svelte';
 </script>
 
-<form method="post" use:enhance>
-	<label for="username">Username:</label><input type="text" name="username" id="username" />
-	<label for="username">Password:</label><input type="password" name="password" id="password" />
-	<button type="submit">Log In</button>
-</form>
-
-<style lang="scss">
-	form {
-		display: grid;
-		grid-template-columns: 5rem auto;
-		max-width: 20rem;
-		button {
-			grid-column: span 2;
-		}
-	}
-</style>
+<Heading>URL Shortener</Heading>
+<Card>
+	<Heading tag="h2">Log In</Heading>
+	<form method="post" use:enhance class="max-w-sm">
+		<Label for="username">Username:</Label><Input type="text" name="username" id="username" />
+		<Label for="username">Password:</Label><Input type="password" name="password" id="password" />
+		<Button type="submit" class="mt-4">Log In</Button>
+	</form>
+</Card>

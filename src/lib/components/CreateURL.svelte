@@ -3,6 +3,7 @@
 	import { fly } from 'svelte/transition';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { A, Alert, Button, ButtonGroup, Input } from 'flowbite-svelte';
+	import { CompressOutline } from 'flowbite-svelte-icons';
 
 	let urlField: HTMLInputElement | undefined = $state();
 	let errorMsg = $state('');
@@ -25,9 +26,14 @@
 	};
 </script>
 
-<form method="POST" use:enhance={onSubmit} action={`/create`} class="relative">
+<form
+	method="POST"
+	use:enhance={onSubmit}
+	action={`/create`}
+	class="md:max-w-128 relative max-w-60 sm:max-w-48"
+>
 	<ButtonGroup>
-		<Input let:props required class="min-w-96">
+		<Input let:props required class="lg:min-w-96 ">
 			<input
 				{...props}
 				bind:this={urlField}
@@ -38,7 +44,9 @@
 				onkeypress={() => (errorMsg = '')}
 			/>
 		</Input>
-		<Button type="submit" color="primary">Shorten</Button>
+		<Button type="submit" color="primary">
+			<CompressOutline /><span class="ml-2 hidden lg:inline">Shorten</span>
+		</Button>
 	</ButtonGroup>
 	{#if errorMsg.length > 0}
 		<div transition:fly={{ y: -200 }} class="absolute top-12 w-full">

@@ -7,9 +7,23 @@
 		TableHeadCell,
 		TableSearch,
 		A,
-		Heading
+		Heading,
+		Card,
+		Input,
+		Button,
+		NavUl,
+		NavLi,
+		Listgroup,
+		ListgroupItem,
+		Span,
+		P
 	} from 'flowbite-svelte';
-	import { AngleDownOutline, AngleUpOutline } from 'flowbite-svelte-icons';
+	import {
+		AngleDownOutline,
+		AngleUpOutline,
+		ClipboardOutline,
+		SearchOutline
+	} from 'flowbite-svelte-icons';
 
 	const { data } = $props();
 
@@ -58,25 +72,66 @@
 {/snippet}
 
 <div>
-	<Heading tag="h2">Links</Heading>
+	<Heading tag="h2" class="m-2">Links</Heading>
 
-	<TableSearch striped placeholder="Search Link" bind:inputValue={search} shadow>
-		<TableHead>
-			<TableHeadCell on:click={() => sortTable('url')}>
-				URL {@render SortArrow('url', sortDirectionUp ?? false)}
-			</TableHeadCell>
-			<TableHeadCell on:click={() => sortTable('shortName')}>
-				Shortened {@render SortArrow('shortName', sortDirectionUp ?? false)}
-			</TableHeadCell>
-		</TableHead>
-		<TableBody tableBodyClass="divide-y">
-			{#each filtered as link (link.shortName)}
-				{@const shortLink = `${data.baseURL}/${link.shortName}`}
-				<TableBodyRow>
-					<TableBodyCell><A href={link.url} target="_blank">{link.url}</A></TableBodyCell>
-					<TableBodyCell><A href={shortLink} target="_blank">{shortLink}</A></TableBodyCell>
-				</TableBodyRow>
-			{/each}
-		</TableBody>
-	</TableSearch>
+	<div class="hidden md:block">
+		<TableSearch striped placeholder="Search Link" bind:inputValue={search} shadow>
+			<TableHead>
+				<TableHeadCell on:click={() => sortTable('url')}>
+					URL {@render SortArrow('url', sortDirectionUp ?? false)}
+				</TableHeadCell>
+				<TableHeadCell on:click={() => sortTable('shortName')}>
+					Shortened {@render SortArrow('shortName', sortDirectionUp ?? false)}
+				</TableHeadCell>
+			</TableHead>
+			<TableBody tableBodyClass="divide-y">
+				{#each filtered as link (link.shortName)}
+					{@const shortLink = `${data.baseURL}/${link.shortName}`}
+					<TableBodyRow>
+						<TableBodyCell>
+							<A href={link.url} class="truncate" target="_blank">{link.url}</A>
+						</TableBodyCell>
+						<TableBodyCell class="flex justify-between">
+							<A href={shortLink} class="truncate" target="_blank">{shortLink}</A>
+							<Button
+								color="alternative"
+								class="p-2"
+								on:click={() => navigator.clipboard.writeText(shortLink)}
+							>
+								<ClipboardOutline />
+							</Button>
+						</TableBodyCell>
+					</TableBodyRow>
+				{/each}
+			</TableBody>
+		</TableSearch>
+	</div>
+	<div class="block p-1 md:hidden">
+		<Card>
+			<Input class="w-full" placeholder="Search" let:props>
+				<input type="text" {...props} bind:value={search} />
+				<SearchOutline slot="left" class="h-6 w-6 text-gray-500 dark:text-gray-400" />
+			</Input>
+			<Listgroup>
+				{#each filtered as link (link.shortName)}
+					{@const shortLink = `${data.baseURL}/${link.shortName}`}
+					<ListgroupItem>
+						<div class="flex justify-between">
+							<A href={shortLink} class="flex flex-col items-start">
+								<P size="xs">{link.url}</P>
+								{shortLink}
+							</A>
+							<Button
+								color="alternative"
+								class="p-2"
+								on:click={() => navigator.clipboard.writeText(shortLink)}
+							>
+								<ClipboardOutline />
+							</Button>
+						</div>
+					</ListgroupItem>
+				{/each}
+			</Listgroup>
+		</Card>
+	</div>
 </div>
