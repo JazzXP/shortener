@@ -102,7 +102,7 @@ export const initDB = (filename: string = defaultFilename) => {
 			.run(shortName, username);
 
 	const generateShortName = (url: string, user: string) => {
-		const minLength = 1;
+		const minLength = parseInt(process.env.MIN_LENGTH ?? '4', 10);
 		const hasher = crypto.createHash('sha512');
 		const hashed = hasher.update(url).digest().toString('base64url');
 		const allVals = getPartialShortNames(hashed.substring(0, minLength));
