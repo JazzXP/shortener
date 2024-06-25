@@ -145,7 +145,6 @@ export const initDB = (filename: string = defaultFilename) => {
 	};
 
 	const deleteLink = (shortName: string, username: string) => {
-		console.log(shortName, username);
 		const delStatement = db.prepare<[string, string], never>(
 			'DELETE FROM user_urls WHERE shortName = ? AND username = ?'
 		);

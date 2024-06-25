@@ -14,7 +14,6 @@
 	const onSubmit: SubmitFunction = () => {
 		return async ({ update, result }) => {
 			await update();
-			console.log(result);
 
 			if (result.type === 'failure') {
 				successMsg = '';

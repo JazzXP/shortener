@@ -17,7 +17,6 @@
 	let activeUrl = $state('');
 	$effect(() => {
 		activeUrl = $page.url.pathname;
-		console.log(activeUrl);
 	});
 </script>
 
