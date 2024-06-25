@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { enhance } from '$app/forms';
 	import {
 		TableBody,
@@ -24,6 +25,11 @@
 		SearchOutline,
 		TrashBinOutline
 	} from 'flowbite-svelte-icons';
+
+	type Link = {
+		url: string;
+		shortName: string;
+	};
 
 	const { data } = $props();
 
@@ -71,6 +77,39 @@
 	{/if}
 {/snippet}
 
+{#snippet LinkTableRow(link: Link)}
+	<!-- Only render this client side due to issues in flowbyte-svelte and svelte 5 -->
+	{@const shortLink = `${data.baseURL}/${link.shortName}`}
+	{#if browser}
+		<TableBodyRow>
+			<TableBodyCell>
+				<A href={link.url} aclass="truncate" target="_blank">{link.url}</A>
+			</TableBodyCell>
+			<TableBodyCell class="flex justify-between">
+				<A href={shortLink} aclass="truncate" target="_blank">{shortLink}</A>
+				<form method="POST" use:enhance>
+					<input type="hidden" name="link" id="link" value={link.shortName} />
+					<ButtonGroup>
+						<Button color="alternative" btnclass="p-2" type="submit">
+							<TrashBinOutline />
+						</Button>
+						<Button
+							color="alternative"
+							btnclass="p-2"
+							on:click={(e) => {
+								e.preventDefault();
+								navigator.clipboard.writeText(shortLink);
+							}}
+						>
+							<ClipboardOutline />
+						</Button>
+					</ButtonGroup>
+				</form>
+			</TableBodyCell>
+		</TableBodyRow>
+	{/if}
+{/snippet}
+
 <div>
 	<Heading tag="h2" class="m-2">Links</Heading>
 
@@ -86,33 +125,7 @@
 			</TableHead>
 			<TableBody tableBodyClass="divide-y">
 				{#each filtered as link (link.shortName)}
-					{@const shortLink = `${data.baseURL}/${link.shortName}`}
-					<TableBodyRow>
-						<TableBodyCell>
-							<A href={link.url} class="truncate" target="_blank">{link.url}</A>
-						</TableBodyCell>
-						<TableBodyCell class="flex justify-between">
-							<A href={shortLink} class="truncate" target="_blank">{shortLink}</A>
-							<form method="POST" use:enhance>
-								<input type="hidden" name="link" id="link" value={link.shortName} />
-								<ButtonGroup>
-									<Button color="alternative" class="p-2" type="submit">
-										<TrashBinOutline />
-									</Button>
-									<Button
-										color="alternative"
-										class="p-2"
-										on:click={(e) => {
-											e.preventDefault();
-											navigator.clipboard.writeText(shortLink);
-										}}
-									>
-										<ClipboardOutline />
-									</Button>
-								</ButtonGroup>
-							</form>
-						</TableBodyCell>
-					</TableBodyRow>
+					{@render LinkTableRow(link)}
 				{/each}
 			</TableBody>
 		</TableSearch>
