@@ -3,7 +3,7 @@
 	import type { Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 	import { CreateUrl } from '$lib/components';
-	import { A, Heading, NavBrand, NavHamburger, NavLi, NavUl, Navbar } from 'flowbite-svelte';
+	import { Heading, NavBrand, NavHamburger, NavLi, NavUl, Navbar } from 'flowbite-svelte';
 	import { page } from '$app/stores';
 	import { LinkOutline, UserOutline } from 'flowbite-svelte-icons';
 

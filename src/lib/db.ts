@@ -144,6 +144,20 @@ export const initDB = (filename: string = defaultFilename) => {
 		};
 	};
 
+	const deleteLink = (shortName: string, username: string) => {
+		console.log(shortName, username);
+		const delStatement = db.prepare<[string, string], never>(
+			'DELETE FROM user_urls WHERE shortName = ? AND username = ?'
+		);
+		const cleanupStatement = db.prepare(
+			'DELETE FROM urls WHERE shortName NOT IN (SELECT shortName FROM user_urls)'
+		);
+		db.transaction(() => {
+			delStatement.run(shortName, username);
+			cleanupStatement.run();
+		})();
+	};
+
 	return {
 		database: db,
 		changeSettings,
@@ -155,6 +169,7 @@ export const initDB = (filename: string = defaultFilename) => {
 		getShortNamesForUser,
 		generateShortName,
 		getLinkFromShortName,
+		deleteLink,
 		updatePassword
 		// addShortName,
 		// addUserToExisting

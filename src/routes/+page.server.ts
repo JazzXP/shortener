@@ -1,5 +1,5 @@
 import { initDB } from '$lib';
-import type { PageServerLoad } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const db = initDB();
@@ -8,4 +8,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 	return {
 		links
 	};
+};
+
+export const actions: Actions = {
+	default: async ({ request, locals }) => {
+		const db = initDB();
+		const link = (await request.formData()).get('link');
+		if (link) db.deleteLink(link.toString(), locals.user);
+	}
 };

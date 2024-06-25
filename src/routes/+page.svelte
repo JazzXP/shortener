@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import {
 		TableBody,
 		TableBodyCell,
@@ -11,18 +12,17 @@
 		Card,
 		Input,
 		Button,
-		NavUl,
-		NavLi,
 		Listgroup,
 		ListgroupItem,
-		Span,
-		P
+		P,
+		ButtonGroup
 	} from 'flowbite-svelte';
 	import {
 		AngleDownOutline,
 		AngleUpOutline,
 		ClipboardOutline,
-		SearchOutline
+		SearchOutline,
+		TrashBinOutline
 	} from 'flowbite-svelte-icons';
 
 	const { data } = $props();
@@ -93,13 +93,24 @@
 						</TableBodyCell>
 						<TableBodyCell class="flex justify-between">
 							<A href={shortLink} class="truncate" target="_blank">{shortLink}</A>
-							<Button
-								color="alternative"
-								class="p-2"
-								on:click={() => navigator.clipboard.writeText(shortLink)}
-							>
-								<ClipboardOutline />
-							</Button>
+							<form method="POST" use:enhance>
+								<input type="hidden" name="link" id="link" value={link.shortName} />
+								<ButtonGroup>
+									<Button color="alternative" class="p-2" type="submit">
+										<TrashBinOutline />
+									</Button>
+									<Button
+										color="alternative"
+										class="p-2"
+										on:click={(e) => {
+											e.preventDefault();
+											navigator.clipboard.writeText(shortLink);
+										}}
+									>
+										<ClipboardOutline />
+									</Button>
+								</ButtonGroup>
+							</form>
 						</TableBodyCell>
 					</TableBodyRow>
 				{/each}
@@ -116,18 +127,37 @@
 				{#each filtered as link (link.shortName)}
 					{@const shortLink = `${data.baseURL}/${link.shortName}`}
 					<ListgroupItem>
-						<div class="flex justify-between">
-							<A href={shortLink} class="flex flex-col items-start">
-								<P size="xs">{link.url}</P>
-								{shortLink}
+						<div class="flex min-w-1 justify-between">
+							<A href={shortLink} class="mr-4 flex w-full min-w-1 flex-1 flex-col items-start">
+								<P
+									size="xs"
+									whitespace="nowrap"
+									class="min-w-1 max-w-full flex-1 truncate [direction:rtl]"
+								>
+									<bdi>{link.url}</bdi>
+								</P>
+								<span class="min-w-1 max-w-full flex-1 truncate" style:direction="rtl">
+									<bdi>{shortLink}</bdi>
+								</span>
 							</A>
-							<Button
-								color="alternative"
-								class="p-2"
-								on:click={() => navigator.clipboard.writeText(shortLink)}
-							>
-								<ClipboardOutline />
-							</Button>
+							<form method="POST" use:enhance class="flex-none">
+								<input type="hidden" name="link" id="link" value={link.shortName} />
+								<ButtonGroup>
+									<Button color="alternative" class="p-2" type="submit">
+										<TrashBinOutline />
+									</Button>
+									<Button
+										color="alternative"
+										class="p-2"
+										on:click={(e) => {
+											e.preventDefault();
+											navigator.clipboard.writeText(shortLink);
+										}}
+									>
+										<ClipboardOutline />
+									</Button>
+								</ButtonGroup>
+							</form>
 						</div>
 					</ListgroupItem>
 				{/each}
